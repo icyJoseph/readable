@@ -12,8 +12,7 @@ To get started developing right away:
     - `cd api-server`
     - `npm install`
     - `node server`
-* In another terminal window, use Create React App to scaffold out the front-end
-    - `create-react-app frontend`
+* In another terminal window, deploy the front-end to port 3000
     - `cd frontend`
     - `npm start`
 
