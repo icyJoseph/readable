@@ -5,12 +5,10 @@
   "dependencies": {
     "axios": "^0.17.0",
     "bootstrap": "^4.0.0-beta",
-    "connected-react-router": "^4.2.3",
-    "history": "^4.7.2",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
-    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.16",
     "reactstrap": "^5.0.0-alpha.3",
     "redux": "^3.7.2",
