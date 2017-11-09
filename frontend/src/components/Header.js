@@ -11,7 +11,8 @@ import {
 } from "reactstrap";
 import { NavLink as RRNavLink } from "react-router-dom";
 
-import { getAllCategories } from "../actions";
+import { getAllCategories, getPosts } from "../actions";
+
 import { capitalizer } from "../utils/helpers";
 
 class Header extends Component {
@@ -29,10 +30,18 @@ class Header extends Component {
     this.props.getAllCategories();
   }
 
+  fetchPosts(cat) {
+    this.props.getPosts(cat);
+  }
+
   renderNavLinks(categories) {
     return categories.map((cat, i) => (
       <NavItem key={i}>
-        <NavLink to={`/${cat.path}`} tag={RRNavLink}>
+        <NavLink
+          to={`/${cat.path}`}
+          tag={RRNavLink}
+          onClick={() => this.fetchPosts(cat.name)}
+        >
           {capitalizer(cat.name)}
         </NavLink>
       </NavItem>
@@ -65,7 +74,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return { getAllCategories: () => dispatch(getAllCategories) };
+  return {
+    getAllCategories: () => dispatch(getAllCategories),
+    getPosts: cat => dispatch(getPosts(cat))
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
