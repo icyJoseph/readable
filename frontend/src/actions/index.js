@@ -10,7 +10,7 @@ const config = {
 };
 
 // Action creator to fetch "all categories" from the server
-export const getAllCategories = (dispatch) => {
+export const getAllCategories = dispatch => {
   dispatch({ type: types.GET_CATEGORIES });
   const query = `${apiEndPoint}/categories`;
   axios.get(query, config).then(res => {
@@ -19,4 +19,18 @@ export const getAllCategories = (dispatch) => {
       payload: res.data.categories
     });
   });
+};
+
+// Action creator to fetch posts for a given category
+export const getPosts = cat => {
+  return function(dispatch) {
+    dispatch({ type: types.GET_POSTS });
+    const query = cat === "" ? "posts" : `${cat}/posts`;
+    axios.get(`${apiEndPoint}/${query}`, config).then(res => {
+      dispatch({
+        type: types.LOAD_POSTS,
+        payload: res.data
+      });
+    });
+  };
 };
