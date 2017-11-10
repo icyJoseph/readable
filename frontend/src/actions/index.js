@@ -34,3 +34,31 @@ export const getPosts = cat => {
     });
   };
 };
+
+//Action creator to get data from a single post by its id
+export const getPostByID = id => {
+  return function(dispatch) {
+    dispatch({ type: types.GET_POST_BY_ID });
+    const query = `posts/${id}`;
+    axios.get(`${apiEndPoint}/${query}`, config).then(res => {
+      dispatch({
+        type: types.LOAD_POST_BY_ID,
+        payload: res.data
+      });
+    });
+  };
+};
+
+// Action creator to fetch the comments that have as parent Post:id
+export const getComments = id => {
+  return function(dispatch) {
+    dispatch({ type: types.GET_COMMENTS });
+    const query = `posts/${id}/comments`;
+    axios.get(`${apiEndPoint}/${query}`, config).then(res => {
+      dispatch({
+        type: types.LOAD_COMMENTS,
+        payload: res.data
+      });
+    });
+  };
+};
