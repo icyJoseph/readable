@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { getPosts } from "../actions";
 import { capitalizer } from "../utils/helpers";
 
-import PostsList from "./PostsList";
+import DisplayList from "./DisplayList";
 
 class Category extends Component {
   componentDidMount() {
@@ -18,7 +18,7 @@ class Category extends Component {
       <div className="App">
         Category Viewer: You are viewing {cat ? capitalizer(cat) : "Main view"}{" "}
         which has {posts.length} posts
-        <PostsList posts={posts} />
+        <DisplayList posts={posts} />
       </div>
     );
   }
