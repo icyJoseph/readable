@@ -11,10 +11,8 @@ export const sortArr = (arr, rule) => {
   let property = "voteScore";
   switch (rule) {
     case types.MOST_POPULAR:
-      property = "voteScore";
       return arr.slice().sort((a, b) => b[property] - a[property]);
     case types.MOST_HATED:
-      property = "voteScore";
       return arr.slice().sort((a, b) => a[property] - b[property]);
     case types.RECENT:
       property = "timestamp";
