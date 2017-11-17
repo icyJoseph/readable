@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Container, Row, Col } from "reactstrap";
 import { getPosts } from "../actions";
 import { capitalizer } from "../utils/helpers";
 
 import DisplayList from "./DisplayList";
+import ToolBar from "./ToolBar";
 
 class Category extends Component {
   componentDidMount() {
@@ -18,7 +20,18 @@ class Category extends Component {
       <div className="App">
         Category Viewer: You are viewing {cat ? capitalizer(cat) : "Main view"}{" "}
         which has {posts.length} posts
-        <DisplayList posts={posts} />
+        <Container>
+          <Row>
+            <Col>
+              <ToolBar />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <DisplayList posts={posts} />
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }
