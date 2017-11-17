@@ -9,11 +9,11 @@ import {
   NavItem,
   NavLink
 } from "reactstrap";
+//Unfortunately reactstap and react-router (RR) use the same name for NavLink
 import { NavLink as RRNavLink } from "react-router-dom";
-
 import { getAllCategories, getPosts } from "../actions";
-
 import { capitalizer } from "../utils/helpers";
+import { BRAND_TITLE } from "../constants";
 
 class Header extends Component {
   state = {
@@ -54,12 +54,18 @@ class Header extends Component {
       <div>
         <Navbar color="faded" light expand="md">
           <NavbarBrand to="/" tag={RRNavLink}>
-            {" "}
-            Readable Home{" "}
+            {BRAND_TITLE}
           </NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.openNavBar} navbar>
-            <Nav className="ml-auto">{this.renderNavLinks(categories)}</Nav>
+            <Nav className="ml-auto">
+              <NavItem>
+                <NavLink to="/newpost" tag={RRNavLink}>
+                  New Post
+                </NavLink>
+              </NavItem>
+              {this.renderNavLinks(categories)}
+            </Nav>
           </Collapse>
         </Navbar>
       </div>
