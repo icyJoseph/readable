@@ -1,11 +1,13 @@
 import axios from "axios";
+import _ from "lodash";
 import * as types from "../constants";
+import { POST, COMMENT } from "../constants";
 
 const apiEndPoint = "http://localhost:3001";
 const config = {
   headers: {
     "X-Requested-With": "XMLHttpRequest",
-    Authorization: "react-redux"
+    Authorization: "whatever-you-want"
   }
 };
 
@@ -42,10 +44,17 @@ export const getPostByID = id => {
     dispatch({ type: types.GET_POST_BY_ID });
     const query = `${apiEndPoint}/posts/${id}`;
     axios.get(query, config).then(res => {
-      dispatch({
-        type: types.LOAD_POST_BY_ID,
-        payload: res.data
-      });
+      if (_.isEmpty(res.data)) {
+        dispatch({
+          type: types.NO_POST,
+          payload: []
+        });
+      } else {
+        dispatch({
+          type: types.LOAD_POST_BY_ID,
+          payload: res.data
+        });
+      }
     });
   };
 };
@@ -54,12 +63,19 @@ export const getPostByID = id => {
 export const getCommentByID = id => {
   return function(dispatch) {
     dispatch({ type: types.GET_COMMENT_BY_ID });
-    const query = `${apiEndPoint}/comment/${id}`;
+    const query = `${apiEndPoint}/comments/${id}`;
     axios.get(query, config).then(res => {
-      dispatch({
-        type: types.LOAD_COMMENT_BY_ID,
-        payload: res.data
-      });
+      if (_.isEmpty(res.data)) {
+        dispatch({
+          type: types.NO_COMMENT,
+          payload: []
+        });
+      } else {
+        dispatch({
+          type: types.LOAD_COMMENT_BY_ID,
+          payload: res.data
+        });
+      }
     });
   };
 };
@@ -82,7 +98,7 @@ export const getComments = id => {
 export const vote = (id, option, type) => {
   const data = { option: option };
   switch (type) {
-    case types.POST:
+    case POST:
       return function(dispatch) {
         dispatch({ type: types.VOTE_POST });
         const query = `${apiEndPoint}/posts/${id}`;
@@ -93,7 +109,7 @@ export const vote = (id, option, type) => {
           });
         });
       };
-    case types.COMMENT:
+    case COMMENT:
       return function(dispatch) {
         dispatch({ type: types.VOTE_COMMENT });
         const query = `${apiEndPoint}/comments/${id}`;
@@ -131,6 +147,63 @@ export const createPost = post => {
       });
     }
   };
+};
+
+//Action creator to edit a post
+export const editPost = post => {
+  if (post.parentId) {
+    return function(dispatch) {
+      dispatch({ type: types.EDIT_COMMENT });
+      const query = `${apiEndPoint}/comments/${post.id}`;
+      axios.put(query, post, config).then(res => {
+        dispatch({
+          type: types.LOAD_COMMENT_BY_ID,
+          payload: res.data
+        });
+      });
+    };
+  } else {
+    return function(dispatch) {
+      dispatch({ type: types.EDIT_POST });
+      const query = `${apiEndPoint}/posts/${post.id}`;
+      axios.put(query, post, config).then(res => {
+        dispatch({
+          type: types.LOAD_POST_BY_ID,
+          payload: res.data
+        });
+      });
+    };
+  }
+};
+
+// Action creator to delete a post or a comment
+export const deletePost = (id, type) => {
+  switch (type) {
+    case POST:
+      return function(dispatch) {
+        dispatch({ type: types.DELETE_POST });
+        const query = `${apiEndPoint}/posts/${id}`;
+        axios.delete(query, config).then(res => {
+          dispatch({
+            type: types.LOAD_POST_BY_ID,
+            payload: res.data
+          });
+        });
+      };
+    case COMMENT:
+      return function(dispatch) {
+        dispatch({ type: types.DELETE_COMMENT });
+        const query = `${apiEndPoint}/comments/${id}`;
+        axios.delete(query, config).then(res => {
+          dispatch({
+            type: types.LOAD_COMMENT_BY_ID,
+            payload: res.data
+          });
+        });
+      };
+    default:
+      return null;
+  }
 };
 
 //Action to change the sorting mechanism
