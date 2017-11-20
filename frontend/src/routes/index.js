@@ -13,7 +13,12 @@ const routes = (
       <Header />
       <Switch>
         <Route path="/newpost" component={PostForm} />
-        <Route path="/editpost/:id" component={PostForm} />
+        <Route
+          path="/editpost/:id"
+          render={({ match, history }) => (
+            <PostForm match={match} history={history} />
+          )}
+        />
         <Route path="/editcomment/:id" component={CommentForm} />
         <Route path="/:cat/:id" component={Post} />
         <Route path="/:cat" component={Category} />
