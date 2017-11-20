@@ -21,7 +21,6 @@ class GenericDisplay extends Component {
   ) {
     const date = new Date(timestamp);
     const formatedDate = moment(date).format("LLLL");
-    console.log(displayBody);
     return (
       <ListGroupItem style={margins}>
         <ListGroupItemHeading>
@@ -30,10 +29,19 @@ class GenericDisplay extends Component {
         <ListGroupItemText style={{ fontSize: "10pt" }}>
           {formatedDate}
         </ListGroupItemText>
-        {displayBody && <ListGroupItemText>{body}</ListGroupItemText>}
-        <ListGroupItemText>by: {author}</ListGroupItemText>
-        <ListGroupItemText>Category: {capitalizer(category)}</ListGroupItemText>
-        <ListGroupItemText>Comments: {commentCount}</ListGroupItemText>
+        {displayBody && (
+          <ListGroupItemText style={{ fontSize: "14pt" }}>
+            {body}
+          </ListGroupItemText>
+        )}
+        <ListGroupItemText style={{ fontSize: "10pt" }}>
+          by: {author}
+        </ListGroupItemText>
+        <ListGroupItemText style={{ fontSize: "10pt" }}>
+          Belongs to <code>{capitalizer(category)}</code> and has{" "}
+          <code>{commentCount}</code>{" "}
+          {commentCount === 1 ? "comment" : "comments"}.
+        </ListGroupItemText>
         <ListGroupItemText>
           Votes:{" "}
           {voteScore > 0 ? (
