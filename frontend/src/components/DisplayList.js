@@ -1,9 +1,31 @@
 import React from "react";
-import { ListGroup } from "reactstrap";
+import { connect } from "react-redux";
+import { ListGroup, Container, Row, Col } from "reactstrap";
 import GenericDisplay from "./GenericDisplay";
+import { sortArr } from "../utils/helpers";
 
-const DisplayList = ({ posts }) => {
-  return <ListGroup>{posts.map(post => <GenericDisplay key={post.id} post={post} />)}</ListGroup>;
+// Export of DisplayList disconnected from React-Redux
+// This allows us to use the component decoupled from Redux
+export const DisplayList = ({ posts, rule }) => {
+  const sortedPosts = sortArr(posts, rule);
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <ListGroup>
+            {sortedPosts.map(post => (
+              <GenericDisplay key={post.id} post={post} />
+            ))}
+          </ListGroup>
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
-export default DisplayList;
+function mapStateToProps(state) {
+  return { rule: state.sort };
+}
+
+// Export of the component connected to Redux
+export default connect(mapStateToProps, null)(DisplayList);
