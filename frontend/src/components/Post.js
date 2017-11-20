@@ -56,7 +56,7 @@ class Post extends Component {
     }
     return (
       <div className="App">
-        <DisplayList posts={post} />
+        <DisplayList posts={post} displayBody={true} />
         <Button color="primary" onClick={this.toggleCommentForm.bind(this)}>
           {NEW_COMMENT}
         </Button>

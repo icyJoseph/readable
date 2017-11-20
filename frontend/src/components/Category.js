@@ -28,7 +28,7 @@ class Category extends Component {
           </Row>
           <Row>
             <Col>
-              <DisplayList posts={posts} />
+              <DisplayList posts={posts} displayBody={false} />
             </Col>
           </Row>
         </Container>

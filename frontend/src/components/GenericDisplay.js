@@ -15,18 +15,13 @@ import { UP_VOTE, DOWN_VOTE, POST, COMMENT } from "../constants";
 import { capitalizer } from "../utils/helpers";
 
 class GenericDisplay extends Component {
-  displayOP({
-    id,
-    timestamp,
-    title,
-    body,
-    author,
-    category,
-    voteScore,
-    commentCount
-  }) {
+  displayOP(
+    { id, timestamp, title, body, author, category, voteScore, commentCount },
+    displayBody
+  ) {
     const date = new Date(timestamp);
     const formatedDate = moment(date).format("LLLL");
+    console.log(displayBody);
     return (
       <ListGroupItem style={margins}>
         <ListGroupItemHeading>
@@ -35,7 +30,7 @@ class GenericDisplay extends Component {
         <ListGroupItemText style={{ fontSize: "10pt" }}>
           {formatedDate}
         </ListGroupItemText>
-        <ListGroupItemText>{body}</ListGroupItemText>
+        {displayBody && <ListGroupItemText>{body}</ListGroupItemText>}
         <ListGroupItemText>by: {author}</ListGroupItemText>
         <ListGroupItemText>Category: {capitalizer(category)}</ListGroupItemText>
         <ListGroupItemText>Comments: {commentCount}</ListGroupItemText>
@@ -114,12 +109,13 @@ class GenericDisplay extends Component {
   }
 
   render() {
-    const { post } = this.props;
+    const { post, displayBody } = this.props;
+    console.log(this.props);
     const postIsAComment = this.props.post.parentId;
     if (postIsAComment) {
       return this.displayComment(post);
     } else {
-      return this.displayOP(post);
+      return this.displayOP(post, displayBody);
     }
   }
 }
