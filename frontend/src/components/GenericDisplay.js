@@ -1,18 +1,20 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
 import {
   ListGroupItem,
   ListGroupItemHeading,
   ListGroupItemText
 } from "reactstrap";
-
+import moment from "moment";
 import Vote from "./Vote";
+
+import { deletePost, getPostByID } from "../actions";
 
 import { UP_VOTE, DOWN_VOTE, POST, COMMENT } from "../constants";
 import { capitalizer } from "../utils/helpers";
 
 class GenericDisplay extends Component {
-  // TODO: Use timeStamp
   displayOP({
     id,
     timestamp,
@@ -24,13 +26,15 @@ class GenericDisplay extends Component {
     commentCount
   }) {
     const date = new Date(timestamp);
-    const formatedDate = date.format("dd.mm.yyyy");
-    console.log(formatedDate);
+    const formatedDate = moment(date).format("LLLL");
     return (
       <ListGroupItem style={margins}>
         <ListGroupItemHeading>
           <NavLink to={`/${category}/${id}`}>{title}</NavLink>{" "}
         </ListGroupItemHeading>
+        <ListGroupItemText style={{ fontSize: "10pt" }}>
+          {formatedDate}
+        </ListGroupItemText>
         <ListGroupItemText>{body}</ListGroupItemText>
         <ListGroupItemText>by: {author}</ListGroupItemText>
         <ListGroupItemText>Category: {capitalizer(category)}</ListGroupItemText>
@@ -53,19 +57,29 @@ class GenericDisplay extends Component {
           <NavLink to={`/editpost/${id}`} style={tooling}>
             Edit
           </NavLink>
-          <span style={tooling}>Delete</span>
+          <NavLink
+            to={`/${category}`}
+            style={tooling}
+            onClick={() => this.props.deletePost(id, POST)}
+          >
+            Delete
+          </NavLink>
         </ListGroupItemText>
         <Vote id={id} type={POST} />
       </ListGroupItem>
     );
   }
 
-  // TODO: Use timeStamp
-  displayComment({ id, author, body, voteScore }) {
+  displayComment({ id, timestamp, author, body, voteScore, parentId }) {
+    const date = new Date(timestamp);
+    const formatedDate = moment(date).format("LLLL");
     return (
       <ListGroupItem style={margins}>
         <ListGroupItemText>{author} says:</ListGroupItemText>
         <ListGroupItemText>{body}</ListGroupItemText>
+        <ListGroupItemText style={{ fontSize: "10pt" }}>
+          {formatedDate}
+        </ListGroupItemText>
         <ListGroupItemText>
           Votes:{" "}
           {voteScore > 0 ? (
@@ -84,7 +98,15 @@ class GenericDisplay extends Component {
           <NavLink to={`/editcomment/${id}`} style={tooling}>
             Edit
           </NavLink>
-          <span style={tooling}>Delete</span>
+          <span
+            style={tooling}
+            onClick={() => {
+              this.props.getPostByID(parentId);
+              this.props.deletePost(id, COMMENT);
+            }}
+          >
+            Delete
+          </span>
         </ListGroupItemText>
         <Vote id={id} type={COMMENT} />
       </ListGroupItem>
@@ -122,4 +144,11 @@ const tooling = {
   textDecoration: "underline"
 };
 
-export default GenericDisplay;
+function mapDispatchToProps(dispatch) {
+  return {
+    getPostByID: parentId => dispatch(getPostByID(parentId)),
+    deletePost: (id, type) => dispatch(deletePost(id, type))
+  };
+}
+
+export default connect(undefined, mapDispatchToProps)(GenericDisplay);
